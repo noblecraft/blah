@@ -1,0 +1,32 @@
+-@ val body: String
+-@ val msie: Boolean
+
+html(lang="en")
+  head
+    link(href={uri("/public/css/base.css")} rel="stylesheet" type="text/css")
+    link(href={uri("/public/css/github.css")} rel="stylesheet" type="text/css")
+    script(type="text/javascript" src="/public/js/svgweb/svg.js" data-path="/public/js/svgweb")
+    script(type="text/javascript" src="/public/js/jquery-1.4.2.min.js")
+    script(type="text/javascript" src="/public/js/pngfix.js")
+    script(type="text/javascript" src="/public/js/cufon/cufon-yui.js")
+    script(type="text/javascript" src="/public/js/cufon/Comic_Sans_MS_400.font.js")
+    :javascript
+      //-Cufon.replace('h1');
+  body
+    #github
+      a(href="https://github.com/noblecraft/blah") fork me on GitHub
+    .diary
+    #me
+      .dzhu 
+        - if (msie)
+          /[if lt IE 9]
+            object(data="/public/img/details.svg" type="image/svg+xml")
+          /[if gte IE 9]
+            object(data="/public/img/details.svg" type="image/svg+xml")
+        - else
+          object(data="/public/img/details.svg" type="image/svg+xml")
+      .picframe
+      .paper
+        .content
+          !~~ body
+

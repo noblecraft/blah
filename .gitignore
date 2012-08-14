@@ -1,0 +1,11 @@
+lib_managed/
+project/boot/
+target/
+project/plugins/src_managed/
+project/plugins/project/
+.DS_Store
+.idea
+.idea_modules
+\#*\#
+*~
+

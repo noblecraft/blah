@@ -1,0 +1,121 @@
+body {
+  font-family: Arial,Helvetica,sans-serif;
+  color: WHITE;
+  background: black url("img/blackboard.jpg") repeat 0 0;
+  text-align: center;
+  padding: 0;
+  margin: 0;
+}
+
+p {
+  font-size: 16px !important;
+}
+
+a {
+    color: darkred;
+}
+
+.diary {
+  background: transparent url("img/diary.png") no-repeat left bottom;
+  position: absolute;
+  width: 403px;
+  height: 511px;
+  left: -350px;
+  top: 30px;
+  z-index: 99;
+}
+
+.wrapper {
+  background-color: white;
+  border-top: 20px solid darkred;
+  border-bottom: 60px solid darkred;
+  width: 1030px;
+  margin: auto;
+  padding: 0;
+}
+
+#me {
+  background: transparent url("img/me.gif") no-repeat 0 0;
+  width: 1030px;
+  height: 830px;
+  margin: auto;
+  margin-top: 0px;
+  text-align: center;
+  color: black;
+  padding: 0;
+  overflow: visible;
+  position: relative;
+}
+
+#me .dzhu {
+    background-color: transparent;
+    width: 400px;
+    height: 200px;
+    position: absolute;
+    top: 590px;
+    left: 38px;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=0.99862953, M12=0.05233596, M21=-0.05233596, M22=0.99862953,sizingMethod='auto expand')";
+    filter: progid:DXImageTransform.Microsoft.Matrix(M11=0.99862953, M12=0.05233596, M21=-0.05233596, M22=0.99862953,sizingMethod='auto expand');
+    -moz-transform:  matrix(0.99862953, -0.05233596, 0.05233596, 0.99862953, 0, 0);
+    -webkit-transform:  matrix(0.99862953, -0.05233596, 0.05233596, 0.99862953, 0, 0);
+    -o-transform:  matrix(0.99862953, -0.05233596, 0.05233596, 0.99862953, 0, 0);
+}
+
+#me .picframe {
+    position: absolute;
+    top: -15px;
+    left: -55px;
+    width: 538px;
+    height: 629px;
+    background: transparent url("img/frame.png") no-repeat 0 0;
+}
+
+#me .paper {
+  position: absolute;
+  width: 720px;
+  height: 888px;
+  background: transparent url("img/paper.png") no-repeat left top;
+  left: 380px;
+}
+
+#me .content {
+    margin: auto;
+    width: 63%;
+    padding-top: 40px;
+    padding-left: 12px;
+    text-align: left;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=0.99619470, M12=0.08715574, M21=-0.08715574, M22=0.99619470,sizingMethod='auto expand')";
+    filter: progid:DXImageTransform.Microsoft.Matrix(M11=0.99619470, M12=0.08715574, M21=-0.08715574, M22=0.99619470,sizingMethod='auto expand');
+    -moz-transform:  matrix(0.99619470, -0.08715574, 0.08715574, 0.99619470, 0, 0);
+    -webkit-transform:  matrix(0.99619470, -0.08715574, 0.08715574, 0.99619470, 0, 0);
+    -o-transform:  matrix(0.99619470, -0.08715574, 0.08715574, 0.99619470, 0, 0);
+}
+
+.glance {
+
+}
+
+.glance ul {
+    display: block;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    margin-bottom: 1em;
+}
+
+.clear {
+    clear:both;
+}
+
+.glance ul li {
+    float: left;
+    width: 60%;
+}
+
+.glance ul li.label {
+    width: 25%;
+    padding-right: 1em;
+    font-weight: bold;
+}
+

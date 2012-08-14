@@ -1,0 +1,9 @@
+<!-- this is so dodgy... -->
+<!--[if !IE]>-->
+  <object data="/public/img/details.svg" type="image/svg+xml"> <!--<![endif]-->
+<!--[if lt IE 9]>
+  <object src="/public/img/details.svg" classid="image/svg+xml"> <![endif]-->
+<!--[if gte IE 9]>
+  <object data="/public/img/details.svg" type="image/svg+xml"> <![endif]-->
+  </object>
+
