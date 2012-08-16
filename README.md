@@ -6,6 +6,15 @@ This project is meant to be a playground for scala, scala-related libraries, and
 
 Go to the [live website](http://davezhu.com) to see this app in action.
 
+## TODO:
+- Publish blogs through GitHub- will pull from blog repo
+- Explore server-side push technologies (websocket, ajax long-poll, socket.io,
+  etc) - will developer a real time stock/commodity price ticker with level-II
+  prices (but with a 1 minute delay)
+- Blog searching through [ES](http://www.elasticsearch.org) / lucene.
+- Explore neo4j a bit more, with relaton to data-mining
+
+
 Some of the tools/libraries/frameworks used (or may be used in the future):
 
 - [scala](http://scala-lang.org/)

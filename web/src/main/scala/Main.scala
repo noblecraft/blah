@@ -28,7 +28,7 @@ object Main {
     Http(port).context("/public") { ctx =>
 
       ctx.resources(this.getClass.getResource("/public"))
-      // ctx.resources(new java.net.URL("file:///Users/dzhu/work/blah/web/src/main/resources/public"))
+//      ctx.resources(new java.net.URL("file:///Users/dzhu/work/blah/web/src/main/resources/public"))
 
       ctx.filter(new org.eclipse.jetty.servlets.GzipFilter())
 

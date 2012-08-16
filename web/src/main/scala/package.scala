@@ -18,7 +18,7 @@ package object web {
   engine.resourceLoader = new FileResourceLoader {
     override def resource(uri: String): Option[Resource] = {
       Some(Resource.fromURL(this.getClass.getResource("/templates/" + uri)))
-      //Some(Resource.fromFile("/Users/dzhu/work/blah/web/src/main/resources/templates/" + uri))
+//      Some(Resource.fromFile("/Users/dzhu/work/blah/web/src/main/resources/templates/" + uri))
     }
   }
 
