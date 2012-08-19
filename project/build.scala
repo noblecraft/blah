@@ -17,6 +17,7 @@ object BlahBuild  extends Build {
   val LOGBACK_VERSION = "1.0.6"
 
   val commonDeps = Seq(
+    "cglib" % "cglib" % "2.2",
     "org.slf4j" % "slf4j-api" % "1.6.6",
     "ch.qos.logback" % "logback-classic" % LOGBACK_VERSION,
     "ch.qos.logback" % "logback-core" % LOGBACK_VERSION,
@@ -32,12 +33,29 @@ object BlahBuild  extends Build {
     "org.hamcrest" % "hamcrest-all" % "1.1" % "test"
   )
 
+  val springDeps = Seq(
+    "org.springframework" % "spring-core" % SPRING_VERSION,
+    "org.springframework" % "spring-context" % SPRING_VERSION,
+    "org.springframework" % "spring-beans" % SPRING_VERSION
+  )
+
+  val resourcesSettings = Seq(resourceDirectory in Compile <<= baseDirectory { _ / "src/main/resources" },
+    resourceDirectory in Test <<= baseDirectory { _ / "src/test/resources" })
+
+  val assemblyMergeSettings = Seq(mergeStrategy in assembly <<= (mergeStrategy in assembly) {
+    (old) => {
+      case "META-INF/spring.tooling" => MergeStrategy.first
+      case "overview.html" => MergeStrategy.first
+      case x => old(x)
+    }
+  }, mainClass in assembly := Some("com.davezhu.blah.web.Main"))
+
   lazy val buildSettings = Defaults.defaultSettings ++ assemblySettings ++ Seq(
     organization := "davezhu.com",
     scalaVersion := "2.9.1",
     crossScalaVersions := Seq("2.8.0", "2.8.1", "2.8.2", "2.9.0", "2.9.1"),
     scalacOptions += "-unchecked" // show warnings
-  ) ++ Seq(resourceDirectory in Compile <<= baseDirectory { _ / "src/main/resources" }) ++ Seq(resourceDirectory in Test <<= baseDirectory { _ / "src/test/resources" })
+  ) ++ resourcesSettings ++ assemblyMergeSettings
 
   // see: http://stackoverflow.com/questions/8588285/how-to-configure-sbt-to-load-resources-when-running-application
 
@@ -68,18 +86,21 @@ object BlahBuild  extends Build {
       libraryDependencies ++= Seq(
         "net.databinder" %% "unfiltered" % UNFILTERED_VERSION,
         "net.databinder" %% "unfiltered-filter" % UNFILTERED_VERSION,
-        "net.databinder" %% "unfiltered-jetty" % UNFILTERED_VERSION
-      ) ++ commonDeps
+        "net.databinder" %% "unfiltered-jetty" % UNFILTERED_VERSION,
+        "net.databinder" %% "unfiltered-netty" % UNFILTERED_VERSION exclude("org.jboss.netty", "netty"),
+        "net.databinder" %% "unfiltered-netty-server" % UNFILTERED_VERSION exclude("org.jboss.netty", "netty"),
+        "net.databinder.dispatch" %% "core" % "0.9.0"
+      ) ++ springDeps ++ commonDeps
     )
-  ) dependsOn (uri("git://github.com/unfiltered/unfiltered-scalate#0.5.3"))
+  ) dependsOn(uri("git://github.com/unfiltered/unfiltered-scalate#0.5.3"), coreModule)
 
   lazy val coreModule = module("core")(
     settings = Seq[Setting[_]](
       libraryDependencies ++= Seq(
         "org.scalaz" %% "scalaz-core" % "6.0.3",
-        "org.apache.httpcomponents" % "httpcore" % "4.1.2",
-        "org.apache.httpcomponents" % "httpclient" % "4.1.2"
-      ) ++ commonDeps
+        "org.apache.commons" % "commons-math" % "2.0",
+        "commons-io" % "commons-io" % "2.0"
+      ) ++ springDeps ++ commonDeps
     ) 
   )
 
