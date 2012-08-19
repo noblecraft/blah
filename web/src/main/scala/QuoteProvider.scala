@@ -113,7 +113,7 @@ class QuoteProvider(val quoteService: QuoteService) extends Actor {
 }
 
 // Quotes simulator that returns random tick/book data
-class MockProvider extends Actor {
+class MockQuoteProvider extends Actor {
 
   val BASE_PRICE = 10000.00
 
@@ -125,12 +125,17 @@ class MockProvider extends Actor {
 
       reactWithin(randomWait) {
 
-        case TIMEOUT => {
-          polls.foreach(_.replyTo ! QuotesReply(randomQuotes))
+        case TIMEOUT =>
+          polls.foreach (poll => {
+            val quotes: Seq[Quote] = randomQuotes
+            println("[INFO] sending LongPoll response: " + quotes)
+            poll.replyTo ! QuotesReply(quotes)
+          })
           polls.clear
-        }
 
-        case lp @ LongPoll(symbol, seq, replyTo) => polls += lp
+        case lp @ LongPoll(symbol, seq, replyTo) =>
+          println("[INFO] received LongPoll request: " + lp)
+          polls += lp
 
       }
 
@@ -138,7 +143,7 @@ class MockProvider extends Actor {
 
   }
 
-  def randomWait = (math.random * 10000).toInt
+  def randomWait = (math.random * ONE_MINUTE * 3).toInt
 
   def randomQuotes: Seq[Quote] = {
 

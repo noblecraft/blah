@@ -3,11 +3,10 @@ package com.davezhu.blah.web
 import unfiltered.netty.Server
 import unfiltered.netty.async.Plan
 import unfiltered.request.{GET, Params}
-import actors.{TIMEOUT, Actor, Futures}
+import actors.TIMEOUT
 import unfiltered.response.{ContentType, ResponseString, Ok}
 import org.jboss.netty.channel.ChannelHandlerContext
 import scala.actors.Actor._
-import com.davezhu.blah.core.QuoteService
 
 
 object TickerServer {
@@ -18,11 +17,9 @@ object TickerServer {
 
   class TickerPlan extends Plan {
 
-    val provider = new QuoteProvider(AppContext.getBean(classOf[QuoteService]))
+    val provider = new MockQuoteProvider//new QuoteProvider(AppContext.getBean(classOf[QuoteService]))
 
     provider.start
-
-    def toJson(quotes: Seq[Quote]): String = ""
 
     def intent = {
 
@@ -32,12 +29,15 @@ object TickerServer {
 
           provider ! LongPoll("ESM2", 1, self)
 
-          reactWithin(5000L) {
+          reactWithin(ONE_MINUTE * 3) {
 
             case quotesReply: QuotesReply =>
-              req.respond(Ok ~> ContentType("application/json") ~> ResponseString(toJson(quotesReply.quotes)))
+              println("[INFO] received LongPoll response: " + quotesReply + ", sending to client")
+              req.respond(Ok ~> ContentType("application/json") ~> ResponseString(JsonConvertor.toQuotesJson(quotesReply.quotes)))
 
-            case TIMEOUT => ResponseString("TIMEOUT, PLS RETRY\n\n")
+            case TIMEOUT =>
+              println("[INFO] did not receive any LongPoll responses in time...")
+              req.respond(Ok ~> ResponseString("TIMEOUT, PLS RETRY\n\n"))
 
           }
 
