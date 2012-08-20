@@ -7,6 +7,8 @@ import actors.TIMEOUT
 import unfiltered.response.{ContentType, ResponseString, Ok}
 import org.jboss.netty.channel.ChannelHandlerContext
 import scala.actors.Actor._
+import com.davezhu.blah.core.{Logging, QuoteService}
+import org.slf4j.LoggerFactory
 
 
 object TickerServer {
@@ -17,7 +19,9 @@ object TickerServer {
 
   class TickerPlan extends Plan {
 
-    val provider = new MockQuoteProvider//new QuoteProvider(AppContext.getBean(classOf[QuoteService]))
+    val LOG = LoggerFactory.getLogger(classOf[TickerPlan])
+
+    val provider = new QuoteProvider(AppContext.getBean(classOf[QuoteService]))
 
     provider.start
 
@@ -25,18 +29,20 @@ object TickerServer {
 
       case req @ GET(Params(params)) => {
 
+        Logging.debug(LOG, "Request params: " + params)
+
         actor {
 
-          provider ! LongPoll("ESM2", 1, self)
+          provider ! LongPoll("ESM2", params.get("since").map(_(0).toLong).getOrElse(-1L), self)
 
           reactWithin(ONE_MINUTE * 3) {
 
             case quotesReply: QuotesReply =>
-              println("[INFO] received LongPoll response: " + quotesReply + ", sending to client")
+              Logging.info(LOG, "Received LongPoll response: " + quotesReply + ", sending to client")
               req.respond(Ok ~> ContentType("application/json") ~> ResponseString(JsonConvertor.toQuotesJson(quotesReply.quotes)))
 
             case TIMEOUT =>
-              println("[INFO] did not receive any LongPoll responses in time...")
+              Logging.info(LOG, "Did not receive any LongPoll responses in time...")
               req.respond(Ok ~> ResponseString("TIMEOUT, PLS RETRY\n\n"))
 
           }

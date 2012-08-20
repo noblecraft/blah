@@ -4,19 +4,19 @@ import com.davezhu.blah.core.Pricing
 
 object JsonConvertor {
 
-  def toQuotesJson(quotes: Seq[Quote]) = toArrayJson(quotes, toQuoteJson)
+  def toQuotesJson(quotes: Seq[Sequenced[Quote]]) = toArrayJson(quotes, toQuoteJson)
 
-  def toQuoteJson(quote: Quote): String = quote match {
-    case b: Book => toBookJson(b)
-    case t: Tick => toTickJson(t)
+  def toQuoteJson(quote: Sequenced[Quote]): String = quote match {
+    case Sequenced(seq, b : Book) => toBookJson(seq, b)
+    case Sequenced(seq, t : Tick) => toTickJson(seq, t)
   }
 
-  def toTickJson(tick: Tick) =
-    "{\"symbol\":\"" + tick.symbol + "\",\"dts\":\"" + tick.dts + "\",\"pricing\":" + toPricingJson(tick.pricing) + "}"
+  def toTickJson(seq: Long, tick: Tick) =
+    "{\"seq\":" + seq + ",\"symbol\":\"" + tick.symbol + "\",\"dts\":\"" + tick.dts + "\",\"pricing\":" + toPricingJson(tick.pricing) + "}"
 
-  def toBookJson(book: Book) = {
+  def toBookJson(seq: Long, book: Book) = {
 
-    new StringBuilder("{\"symbol\":\"" + book.symbol + "\",\"dts\":\"" + book.dts + "\"").append(
+    new StringBuilder("{\"seq\":" + seq + ",\"symbol\":\"" + book.symbol + "\",\"dts\":\"" + book.dts + "\"").append(
 
       if (book.bids.size > 0) {
         ",\"bids\":" + toArrayJson(book.bids, toPricingJson)

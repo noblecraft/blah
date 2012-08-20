@@ -5,27 +5,28 @@ import org.scalatest.{FlatSpec, GivenWhenThen}
 import org.scalatest.matchers.ShouldMatchers
 import org.joda.time.{DateTimeConstants, DateTime}
 
-class JsonConvertorTest extends FlatSpec with GivenWhenThen with ShouldMatchers {
+class JsonConvertorSpec extends FlatSpec with GivenWhenThen with ShouldMatchers {
 
   val SYMBOL = "ESM2"
 
   val DTS_NOW = new DateTime(2012, DateTimeConstants.JANUARY, 1, 0, 0)
 
-  val EXPECTED_BOOK_JSON_1: String = "{\"symbol\":\"ESM2\",\"dts\":\"2012-01-01T00:00:00.000+10:00\"}"
+  val EXPECTED_BOOK_JSON_1: String = "{\"seq\":1,\"symbol\":\"ESM2\",\"dts\":\"2012-01-01T00:00:00.000+10:00\"}"
 
   val EXPECTED_BOOK_JSON_2: String =
     "{" +
+      "\"seq\":1," +
       "\"symbol\":\"ESM2\"," +
       "\"dts\":\"2012-01-01T00:00:00.000+10:00\"," +
       "\"bids\":[{\"price\":10.0,\"qty\":1},{\"price\":11.1,\"qty\":2}]," +
       "\"asks\":[{\"price\":12.2,\"qty\":1},{\"price\":13.3,\"qty\":2}]" +
     "}"
 
-  val EXPECTED_TICK_JSON = "{\"symbol\":\"ESM2\",\"dts\":\"2012-01-01T00:00:00.000+10:00\",\"pricing\":{\"price\":11.1,\"qty\":1}}"
+  val EXPECTED_TICK_JSON = "{\"seq\":1,\"symbol\":\"ESM2\",\"dts\":\"2012-01-01T00:00:00.000+10:00\",\"pricing\":{\"price\":11.1,\"qty\":1}}"
 
   val EXPECTED_QUOTES_JSON = "[" +
-    "{\"symbol\":\"ESM2\",\"dts\":\"2012-01-01T00:00:00.000+10:00\",\"pricing\":{\"price\":11.1,\"qty\":1}}," +
-    "{\"symbol\":\"ESM2\",\"dts\":\"2012-01-01T00:00:00.000+10:00\"," +
+    "{\"seq\":1,\"symbol\":\"ESM2\",\"dts\":\"2012-01-01T00:00:00.000+10:00\",\"pricing\":{\"price\":11.1,\"qty\":1}}," +
+    "{\"seq\":2,\"symbol\":\"ESM2\",\"dts\":\"2012-01-01T00:00:00.000+10:00\"," +
       "\"bids\":[{\"price\":10.0,\"qty\":1},{\"price\":11.1,\"qty\":2}]," +
       "\"asks\":[{\"price\":12.2,\"qty\":1},{\"price\":13.3,\"qty\":2}]" +
     "}]"
@@ -43,16 +44,16 @@ class JsonConvertorTest extends FlatSpec with GivenWhenThen with ShouldMatchers 
   }
 
   it should "convert book" in {
-    JsonConvertor.toBookJson(Book(SYMBOL, DTS_NOW, Seq(), Seq())) should equal (EXPECTED_BOOK_JSON_1)
-    JsonConvertor.toBookJson(Book(SYMBOL, DTS_NOW, BIDS, ASKS)) should equal (EXPECTED_BOOK_JSON_2)
+    JsonConvertor.toBookJson(1, Book(SYMBOL, DTS_NOW, Seq(), Seq())) should equal (EXPECTED_BOOK_JSON_1)
+    JsonConvertor.toBookJson(1, Book(SYMBOL, DTS_NOW, BIDS, ASKS)) should equal (EXPECTED_BOOK_JSON_2)
   }
 
   it should "convert tick" in {
-    JsonConvertor.toTickJson(Tick(SYMBOL, DTS_NOW, Pricing(11.1, 1))) should equal (EXPECTED_TICK_JSON)
+    JsonConvertor.toTickJson(1, Tick(SYMBOL, DTS_NOW, Pricing(11.1, 1))) should equal (EXPECTED_TICK_JSON)
   }
 
   it should "convert quotes" in {
-    val quotes: Seq[Quote] = Seq(Tick(SYMBOL, DTS_NOW, Pricing(11.1, 1)), Book(SYMBOL, DTS_NOW, BIDS, ASKS))
+    val quotes: Seq[Sequenced[Quote]] = Seq(Sequenced(1, Tick(SYMBOL, DTS_NOW, Pricing(11.1, 1))), Sequenced(2, Book(SYMBOL, DTS_NOW, BIDS, ASKS)))
     JsonConvertor.toQuotesJson(quotes) should equal (EXPECTED_QUOTES_JSON)
   }
 

@@ -2,9 +2,15 @@ package com.davezhu.blah.web
 
 import collection.mutable.ArrayBuffer
 import org.joda.time.{Duration, DateTime}
+import org.slf4j.LoggerFactory
+import com.davezhu.blah.core.Logging
+
+case class Sequenced[+T](seq: Long, t: T)
 
 class Quotes(val quotes: ArrayBuffer[(Long, Quote)] = ArrayBuffer(), val delay: Int = ONE_MINUTE,
              val dateTimeService: DateTimeService = new DateTimeService {}) {
+
+  val LOG = LoggerFactory.getLogger(classOf[Quotes])
 
   for (i <- 0 until quotes.size) {
     assert(quotes(i)._1 == i.toLong)
@@ -17,22 +23,32 @@ class Quotes(val quotes: ArrayBuffer[(Long, Quote)] = ArrayBuffer(), val delay: 
   def +=(q: Quote) {
     quotes += ((seq, q))
     seq += 1
+    Logging.debug(LOG, "Quotes size=" + quotes.size)
   }
 
   // from is exclusive
-  def since(from: Long): Seq[Quote] = {
+  def since(from: Long): Seq[Sequenced[Quote]] = {
     val now = dateTimeService.now
-    val qs: ArrayBuffer[(Long, Quote)] = quotes.slice(seqToIndex(from) + 1, quotes.size).filter {
-      case (quoteSeq, quote) => now.getMillis - quote.dts.getMillis >= delay
+    quotes.slice(seqToIndex(from) + 1, quotes.size).filter {
+      case (quoteSeq, quote) => isMature(now, quote)
+    }.map {
+      case (seq, quote) => Sequenced(seq, quote)
     }
-    qs.map(_._2)
   }
 
-  private def seqToIndex(seq: Long) = math.max(0, (seq - discarded).toInt - 1)
+  def latest: Option[Sequenced[Quote]] = {
 
-  def latest = quotes.filter {
-    case (quoteSeq, quote) => (dateTimeService.now.getMillis - quote.dts.getMillis) >= delay
-  }.last._2
+    val s = quotes.filter {
+      case (quoteSeq, quote) => isMature(dateTimeService.now, quote)
+    }
+
+    if (s.size > 0) {
+      Some(Sequenced(s.last._1, s.last._2))
+    }  else {
+      None
+    }
+
+  }
 
   def discardOld {
     val now = dateTimeService.now
@@ -41,12 +57,18 @@ class Quotes(val quotes: ArrayBuffer[(Long, Quote)] = ArrayBuffer(), val delay: 
     }
     discarded += toRemove.size
     quotes --= toRemove
+    Logging.debug(LOG, "Discarded " + toRemove.size + " old quotes")
+    Logging.debug(LOG, "Quotes size=" + quotes.size)
   }
 
   def size = quotes.size
 
-  def contains(quote: Book) = quotes.contains(quote)
+  def contains(quote: Quote) = quotes.exists(_._2 == quote)
 
   override def clone = new Quotes(quotes.clone, delay, dateTimeService)
+
+  private def isMature(now: DateTime, quote: Quote) = now.getMillis - quote.dts.getMillis >= delay
+
+  private def seqToIndex(seq: Long) = math.max(0, (seq - discarded).toInt - 1)
 
 }

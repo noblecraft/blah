@@ -9,11 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import QuoteLevel.QuoteLevel
 import collection.mutable.{Map, Set}
+import org.slf4j.{LoggerFactory, Logger}
 
 
 @Service
-class BarchartQuoteService @Autowired()(val client: JerqClient) extends QuoteService with Actor {
-  actorRef =>
+class BarchartQuoteService @Autowired()(val client: JerqClient) extends QuoteService with Actor { actorRef =>
+
+  val LOG = LoggerFactory.getLogger(classOf[BarchartQuoteService])
 
   val jerqListeners: Map[String, IJerqClientListener] = Map[String, IJerqClientListener]()
 
@@ -42,25 +44,33 @@ class BarchartQuoteService @Autowired()(val client: JerqClient) extends QuoteSer
 
   def act() {
 
+    Logging.info(LOG, "barchart quote service started")
+
     while (true) {
 
       receive {
 
-        case msg@NotifyTick(symbol, _) => subscribersBySymbol.get(symbol).foreach {
+        case msg @ NotifyTick(symbol, _) => subscribersBySymbol.get(symbol).foreach {
+          Logging.info(LOG, "Tick received for symbol " + symbol + ", notifying subscribers...")
+          Logging.debug(LOG, "Message: " + msg)
           subscribers =>
             subscribers.foreach {
               _ ! msg
             }
         }
 
-        case msg@NotifyQuote(symbol, _, _) => subscribersBySymbol.get(symbol).foreach {
+        case msg @ NotifyQuote(symbol, _, _) => subscribersBySymbol.get(symbol).foreach {
+          Logging.info(LOG, "Quote received for symbol " + symbol + ", notifying subscribers...")
+          Logging.debug(LOG, "Message: " + msg)
           subscribers =>
             subscribers.foreach {
               _ ! msg
             }
         }
 
-        case msg@NotifyBook(symbol, _, _) => subscribersBySymbol.get(symbol).foreach {
+        case msg @ NotifyBook(symbol, _, _) => subscribersBySymbol.get(symbol).foreach {
+          Logging.info(LOG, "Book received for symbol " + symbol + ", notifying subscribers...")
+          Logging.debug(LOG, "Message: " + msg)
           subscribers =>
             subscribers.foreach {
               _ ! msg
@@ -73,15 +83,21 @@ class BarchartQuoteService @Autowired()(val client: JerqClient) extends QuoteSer
 
           if (!jerqListeners.contains(symbol)) {
 
+            Logging.debug(LOG, "No Jerq client listener is registered to listen to symbol=" + symbol)
+
             val listener = new SymbolListener(symbol)
 
             jerqListeners += ((symbol, listener))
 
             client.addClientListener(listener)
 
+            Logging.debug(LOG, "Added Jerq client listener for symbol=" + symbol)
+
           }
 
           subscribersBySymbol.getOrElseUpdate(symbol, Set[Actor]()) += subscriber
+
+          Logging.info(LOG, "Subscribed: subscriber=[" + subscriber + "], symbol=" + symbol + ", level=" + level)
 
         case UnSubscribe(subscriber, symbol) =>
 

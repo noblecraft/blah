@@ -7,7 +7,7 @@ object AppContext {
 
   val context = new AnnotationConfigApplicationContext(classOf[ModuleConfig])
 
-  context.scan("com.davezhu.core")
+  context.scan("com.davezhu.blah.core")
 
   def getBean[T](clazz: Class[T]) = context.getBean(clazz)
 

@@ -9,7 +9,10 @@ object Main {
 
     MainServer.configure(8226).start
 
-    TickerServer.configure(8121).start
+    if (sys.props.get("tickerServer").exists(_ == "on")) {
+      println("[INFO] starting ticker server on port 8121...")
+      TickerServer.configure(8121).start
+    }
 
   }
 

@@ -4,9 +4,10 @@ import org.scalatest.{GivenWhenThen, FeatureSpec}
 import org.joda.time.{DateTimeConstants, DateTime}
 import collection.mutable.ArrayBuffer
 import com.davezhu.blah.core.Pricing
+import org.scalatest.matchers.{Matcher, ShouldMatchers}
 
 
-class QuotesSpec extends FeatureSpec with GivenWhenThen {
+class QuotesSpec extends FeatureSpec with GivenWhenThen with ShouldMatchers {
 
   val SYMBOL = "ESM2"
 
@@ -31,8 +32,8 @@ class QuotesSpec extends FeatureSpec with GivenWhenThen {
       quotes += book(new DateTime())
       quotes += book(new DateTime())
       then("the size of quotes should be 2")
-      assert(quotes.size == 2)
-      assert(quotes.seq == 2)
+      quotes.size should equal (2)
+      quotes.seq should equal (2)
     }
 
     scenario("Creating quotes object with invalid seq numbers") {
@@ -54,8 +55,8 @@ class QuotesSpec extends FeatureSpec with GivenWhenThen {
       quotes += book(new DateTime())
       quotes += book(new DateTime())
       then("the size of quotes should be 4")
-      assert(quotes.size == 4)
-      assert(quotes.seq == 4)
+      quotes.size should equal (4)
+      quotes.seq should equal (4)
 
     }
 
@@ -68,11 +69,11 @@ class QuotesSpec extends FeatureSpec with GivenWhenThen {
       given("I have a 3 quotes")
       val quotes = createQuotes(NO_DELAY, quote1, quote2, quote3)
       when("I get quotes since 1")
-      val quotesSince = quotes.since(1L)
+      val quotesSince: Seq[Sequenced[Quote]] = quotes.since(1L)
       then("there I should get 2 quotes")
-      assert(quotesSince.size == 2)
-      assert(quotesSince.contains(quote2))
-      assert(quotesSince.contains(quote3))
+      quotesSince should have size (2)
+      quotesSince.contains(Sequenced(1, quote2)) should equal (true)
+      quotesSince.contains(Sequenced(2, quote3)) should equal (true)
 
     }
 
@@ -83,8 +84,8 @@ class QuotesSpec extends FeatureSpec with GivenWhenThen {
       when("I get quotes since 1")
       val quotesSince = quotes.since(1L)
       then("I should get only quotes older than the delay")
-      assert(quotesSince.size == 1)
-      assert(quotesSince.contains(quote2))
+      quotesSince should have size(1)
+      quotesSince.contains(Sequenced(1, quote2)) should equal (true)
 
     }
 
@@ -95,7 +96,7 @@ class QuotesSpec extends FeatureSpec with GivenWhenThen {
       when("I get lastest quote")
       val lastQuote = quotes.latest
       then("I should get quote#4")
-      assert(lastQuote == quote4)
+      lastQuote should equal (Some(Sequenced(3, quote4)))
 
     }
 
@@ -106,7 +107,18 @@ class QuotesSpec extends FeatureSpec with GivenWhenThen {
       when("I get lastest quote")
       val lastQuote = quotes.latest
       then("I should get quote#2")
-      assert(lastQuote == quote2)
+      lastQuote should equal (Some(Sequenced(1, quote2)))
+
+    }
+
+    scenario("Get last quote with 1 hour delay, no matured quotes") {
+
+      given("I have 4 quotes with 1 hour delay")
+      val quotes = createQuotes(ONE_MINUTE * 60, quote1, quote2, quote3, quote4)
+      when("I get lastest quote")
+      val lastQuote = quotes.latest
+      then("I should get nothing")
+      lastQuote should equal (None)
 
     }
 
