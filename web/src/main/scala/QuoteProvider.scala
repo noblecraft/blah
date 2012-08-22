@@ -26,7 +26,7 @@ class QuoteProvider(val quoteService: QuoteService, val dateTimeService: DateTim
 
   val LOG = LoggerFactory.getLogger(classOf[QuoteProvider])
 
-  val quotes = new Quotes(delay = 0)
+  val quotes = new Quotes(delay = 1)
 
   val polls = scala.collection.mutable.ArrayBuffer[LongPoll]()
 

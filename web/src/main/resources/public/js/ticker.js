@@ -1,6 +1,6 @@
-var baseUrl = 'http://davezhu.com/api/'
+var baseUrl = 'http://davezhu.com/api/';
 
-var seq = -1
+var seq = -1;
 
 var previousTopOfBook = null;
 
@@ -20,7 +20,7 @@ $(document).ready(function() {
         updatePrevious({ bid: book.bids[0], ask: book.asks[0] });
         var bidNode = $('#top li.bid div.pricing');
         updatePricing(bidNode, book.bids[0]);
-        var askNode = $('#top li.ask div.pricing')
+        var askNode = $('#top li.ask div.pricing');
         updatePricing(askNode, book.asks[0]);
     }
 
@@ -78,7 +78,7 @@ $(document).ready(function() {
 
             success: function(data){
                 $.each(data, function(i, item) {
-                    seq = item.seq
+                    seq = item.seq;
                     if (item.tick) {
                         // tick
                         handleTick(item);
@@ -90,7 +90,7 @@ $(document).ready(function() {
             },
 
             complete: function() {
-                poll(baseUrl + '?since=' + seq)
+                poll(baseUrl + '?since=' + seq);
             },
 
             timeout: 30000

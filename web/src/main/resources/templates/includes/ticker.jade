@@ -1,0 +1,75 @@
+.ticker
+    .new
+        |New!
+        .pin(style="left: 150px; top: 1px;")
+    .left
+        #top
+            ul.line
+                li.bid
+                    .label
+                        span.arrow &nbsp;
+                        span.label BID
+                    .pricing
+                        span.qty
+                        span.price
+                li.ask
+                    .label
+                        span.label ASK
+                        span.arrow &nbsp;
+                    .pricing
+                        span.price
+                        span.qty
+        br.clear
+        .lines
+            ul.line
+                li.bid
+                    span.qty
+                    span.price
+                li.ask
+                    span.price
+                    span.qty
+            ul.line
+                li.bid
+                    span.qty
+                    span.price
+                li.ask
+                    span.price
+                    span.qty
+            ul.line
+                li.bid
+                    span.qty
+                    span.price
+                li.ask
+                    span.price
+                    span.qty
+            ul.line
+                li.bid
+                    span.qty
+                    span.price
+                li.ask
+                    span.price
+                    span.qty
+            ul.line
+                li.bid
+                    span.qty
+                    span.price
+                li.ask
+                    span.price
+                    span.qty
+        br.clear
+        div Last:&nbsp;
+        .last
+            span.price
+            span.qty
+        br.clear
+
+    .right
+        p
+            | This is a LIVE (5 minutes delay) stock ticker for the
+            a(href="http://cmegroup.com/trading/equity-index/us-index/e-mini-sandp500_contract_specifications.html") E-mini S&P500 US futures market.
+        p
+            | The
+            a(href="https://github.com/noblecraft/blah") source code
+            | for this widget, and the backend quote engine can be found in
+            a(href="https://github.com/noblecraft") my github repository
+            The data is sourced from barchart.com (who I have a paid account with).

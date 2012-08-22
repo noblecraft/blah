@@ -5,9 +5,11 @@ html(lang="en")
   head
     link(href={uri("/public/css/base.css")} rel="stylesheet" type="text/css")
     link(href={uri("/public/css/github.css")} rel="stylesheet" type="text/css")
+    link(href={uri("/public/css/ticker.css")} rel="stylesheet" type="text/css")
     script(type="text/javascript" src="/public/js/svgweb/svg.js" data-path="/public/js/svgweb")
     script(type="text/javascript" src="/public/js/jquery-1.7.2.min.js")
     script(type="text/javascript" src="/public/js/jquery-ui-1.8.22.custom.min.js")
+    script(type="text/javascript" src="/public/js/ticker.js")
     script(type="text/javascript" src="/public/js/pngfix.js")
     script(type="text/javascript" src="/public/js/cufon/cufon-yui.js")
     script(type="text/javascript" src="/public/js/cufon/Comic_Sans_MS_400.font.js")
@@ -30,6 +32,7 @@ html(lang="en")
           - else
             object(data="/public/img/details.svg" type="image/svg+xml")
         .picframe
+          = include("includes/ticker.jade")
         .paper
           .pin(style="top: 15px; left: 320px")
           .content

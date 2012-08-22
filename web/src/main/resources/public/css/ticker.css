@@ -7,14 +7,34 @@ body {
 }
 
 .ticker {
-    width: 180px;
+    position: absolute;
+    bottom: 20px;
+    left: 120px;
+    background-color: white;
     margin: auto;
     border-radius: 10px;
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
     border: 1px solid #A0A0A0;
-    box-shadow: #E0E0E0 5px 5px;
     padding: 10px;
+    color: black;
+    text-align: left;
+    width: 300px;
+}
+
+.ticker .new {
+    background-color: yellow;
+}
+
+.ticker .left {
+    width: 180px;
+    float: left;
+}
+
+.ticker .right p {
+    padding: 0;
+    margin: 5px;
+    font-size: 10px !important;
 }
 
 ul.line {
@@ -44,7 +64,7 @@ ul.line {
 }
 
 .ticker #top ul.line li {
-    font-size: 1.5em !important;
+    font-size: 20px !important;
     background-color: #d3d3d3;
 }
 
