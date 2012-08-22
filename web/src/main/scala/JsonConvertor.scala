@@ -12,7 +12,8 @@ object JsonConvertor {
   }
 
   def toTickJson(seq: Long, tick: Tick) =
-    "{\"seq\":" + seq + ",\"symbol\":\"" + tick.symbol + "\",\"dts\":\"" + tick.dts + "\",\"pricing\":" + toPricingJson(tick.pricing) + "}"
+    "{\"seq\":" + seq + ",\"symbol\":\"" + tick.symbol + "\",\"dts\":\"" + tick.dts +
+      "\",\"pricing\":" + toPricingJson(tick.pricing) + ",\"tick\":true}"
 
   def toBookJson(seq: Long, book: Book) = {
 

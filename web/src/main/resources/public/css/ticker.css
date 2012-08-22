@@ -1,0 +1,106 @@
+body {
+    font-family: Arial,Helvetica,sans-serif;
+}
+
+.clear {
+    clear:both;
+}
+
+.ticker {
+    width: 180px;
+    margin: auto;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border: 1px solid #A0A0A0;
+    box-shadow: #E0E0E0 5px 5px;
+    padding: 10px;
+}
+
+ul.line {
+    height: 10px;
+    margin: 0;
+    padding: 0;
+    line-height: 13px;
+    height: 13px;
+    width: 180px;
+    display: block;
+    list-style: none;
+    text-align: center;
+    border-bottom: 1px solid #F0F0F0;
+}
+
+.ticker #top {
+    height: 12px;
+}
+
+.ticker #top ul.line {
+    border-bottom: none;
+}
+
+.ticker #top .label {
+    font-size: 8px !important;
+    font-weight: 100;
+}
+
+.ticker #top ul.line li {
+    font-size: 1.5em !important;
+    background-color: #d3d3d3;
+}
+
+.ticker #top ul.line li div {
+    background-color: transparent;
+}
+
+.ticker #top ul.line {
+    height: 20px;
+}
+
+.ticker #top {
+    font-weight: bold;
+}
+
+ul.line li {
+    float: left;
+    width: 80px;
+    margin: 0 5px;
+}
+
+ul.line li.bid {
+    text-align: right;
+}
+
+ul.line li.ask {
+    text-align: left;
+}
+
+.price {
+    font-weight: bold;
+    font-size: 0.6em;
+}
+
+.qty {
+    font-size: 0.4em;
+    margin: 0 2px;
+}
+
+.last {
+    float: left;
+}
+
+.ticker .arrow {
+    padding: 1px 5px;
+    margin:0;
+}
+
+.ticker .down {
+    background: transparent url(img/down.png) no-repeat 0 0;
+}
+
+.ticker .up {
+    background: transparent url(img/up.png) no-repeat 0 0;
+}
+
+.ticker .label {
+    margin: 0 3px;
+}

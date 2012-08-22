@@ -22,10 +22,17 @@ class JsonConvertorSpec extends FlatSpec with GivenWhenThen with ShouldMatchers 
       "\"asks\":[{\"price\":12.2,\"qty\":1},{\"price\":13.3,\"qty\":2}]" +
     "}"
 
-  val EXPECTED_TICK_JSON = "{\"seq\":1,\"symbol\":\"ESM2\",\"dts\":\"2012-01-01T00:00:00.000+10:00\",\"pricing\":{\"price\":11.1,\"qty\":1}}"
+  val EXPECTED_TICK_JSON = "{" +
+      "\"seq\":1," +
+      "\"symbol\":\"ESM2\"," +
+      "\"dts\":\"2012-01-01T00:00:00.000+10:00\"," +
+      "\"pricing\":{\"price\":11.1,\"qty\":1}," +
+      "\"tick\":true" +
+    "}"
 
   val EXPECTED_QUOTES_JSON = "[" +
-    "{\"seq\":1,\"symbol\":\"ESM2\",\"dts\":\"2012-01-01T00:00:00.000+10:00\",\"pricing\":{\"price\":11.1,\"qty\":1}}," +
+    "{\"seq\":1,\"symbol\":\"ESM2\",\"dts\":\"2012-01-01T00:00:00.000+10:00\"," +
+      "\"pricing\":{\"price\":11.1,\"qty\":1},\"tick\":true}," +
     "{\"seq\":2,\"symbol\":\"ESM2\",\"dts\":\"2012-01-01T00:00:00.000+10:00\"," +
       "\"bids\":[{\"price\":10.0,\"qty\":1},{\"price\":11.1,\"qty\":2}]," +
       "\"asks\":[{\"price\":12.2,\"qty\":1},{\"price\":13.3,\"qty\":2}]" +

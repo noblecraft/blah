@@ -51,7 +51,7 @@ class BarchartQuoteService @Autowired()(val client: JerqClient) extends QuoteSer
       receive {
 
         case msg @ NotifyTick(symbol, _) => subscribersBySymbol.get(symbol).foreach {
-          Logging.info(LOG, "Tick received for symbol " + symbol + ", notifying subscribers...")
+          Logging.debug(LOG, "Tick received for symbol " + symbol + ", notifying subscribers...")
           Logging.debug(LOG, "Message: " + msg)
           subscribers =>
             subscribers.foreach {
@@ -60,7 +60,7 @@ class BarchartQuoteService @Autowired()(val client: JerqClient) extends QuoteSer
         }
 
         case msg @ NotifyQuote(symbol, _, _) => subscribersBySymbol.get(symbol).foreach {
-          Logging.info(LOG, "Quote received for symbol " + symbol + ", notifying subscribers...")
+          Logging.debug(LOG, "Quote received for symbol " + symbol + ", notifying subscribers...")
           Logging.debug(LOG, "Message: " + msg)
           subscribers =>
             subscribers.foreach {
@@ -69,7 +69,7 @@ class BarchartQuoteService @Autowired()(val client: JerqClient) extends QuoteSer
         }
 
         case msg @ NotifyBook(symbol, _, _) => subscribersBySymbol.get(symbol).foreach {
-          Logging.info(LOG, "Book received for symbol " + symbol + ", notifying subscribers...")
+          Logging.debug(LOG, "Book received for symbol " + symbol + ", notifying subscribers...")
           Logging.debug(LOG, "Message: " + msg)
           subscribers =>
             subscribers.foreach {
@@ -97,7 +97,7 @@ class BarchartQuoteService @Autowired()(val client: JerqClient) extends QuoteSer
 
           subscribersBySymbol.getOrElseUpdate(symbol, Set[Actor]()) += subscriber
 
-          Logging.info(LOG, "Subscribed: subscriber=[" + subscriber + "], symbol=" + symbol + ", level=" + level)
+          Logging.debug(LOG, "Subscribed: subscriber=[" + subscriber + "], symbol=" + symbol + ", level=" + level)
 
         case UnSubscribe(subscriber, symbol) =>
 

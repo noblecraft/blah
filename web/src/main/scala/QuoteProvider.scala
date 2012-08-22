@@ -58,7 +58,7 @@ class QuoteProvider(val quoteService: QuoteService, val dateTimeService: DateTim
         }
 
         case lp: LongPoll => {
-          Logging.info(LOG, "LongPoll: " + lp)
+          Logging.debug(LOG, "LongPoll: " + lp)
           if (!sendQuotes(lp)) {
             polls += lp
           }
@@ -88,8 +88,8 @@ class QuoteProvider(val quoteService: QuoteService, val dateTimeService: DateTim
     val now = dateTimeService.now
     val oldPolls = polls.filter(p => new Duration(p.dts, now).getMillis > FIVE_MINUTES)
     polls --= oldPolls
-    Logging.info(LOG, "Removed " + oldPolls.size + " LongPolls for being > 5 minutes old")
-    Logging.info(LOG, "LongPolls size=" + polls.size)
+    Logging.debug(LOG, "Removed " + oldPolls.size + " LongPolls for being > 5 minutes old")
+    Logging.debug(LOG, "LongPolls size=" + polls.size)
   }
 
   private def sendQuotes(p: LongPoll): Boolean = {
@@ -139,13 +139,13 @@ class MockQuoteProvider extends Actor {
         case TIMEOUT =>
           polls.foreach (poll => {
             val quotes: Seq[Sequenced[Quote]] = randomQuotes
-            Logging.info(LOG, "Sending LongPoll response: " + quotes)
+            Logging.debug(LOG, "Sending LongPoll response: " + quotes)
             poll.replyTo ! QuotesReply(quotes)
           })
           polls.clear
 
         case lp: LongPoll =>
-          Logging.info(LOG, "Received LongPoll request: " + lp)
+          Logging.debug(LOG, "Received LongPoll request: " + lp)
           polls += lp
 
       }

@@ -38,12 +38,14 @@ object TickerServer {
           reactWithin(ONE_MINUTE * 3) {
 
             case quotesReply: QuotesReply =>
-              Logging.info(LOG, "Received LongPoll response: " + quotesReply + ", sending to client")
+              Logging.debug(LOG, "Received LongPoll response: " + quotesReply + ", sending to client")
               req.respond(Ok ~> ContentType("application/json") ~> ResponseString(JsonConvertor.toQuotesJson(quotesReply.quotes)))
 
             case TIMEOUT =>
-              Logging.info(LOG, "Did not receive any LongPoll responses in time...")
+              Logging.debug(LOG, "Did not receive any LongPoll responses in time...")
               req.respond(Ok ~> ResponseString("TIMEOUT, PLS RETRY\n\n"))
+
+            case _ => Unit
 
           }
 
