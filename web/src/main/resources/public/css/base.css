@@ -67,6 +67,7 @@ a {
 
 #me .paper {
   position: absolute;
+  top: -30px;
   width: 720px;
   height: 888px;
   background: transparent url("img/paper.png") no-repeat left top;
@@ -75,9 +76,9 @@ a {
 
 #me .content {
     margin: auto;
-    width: 63%;
+    width: 68%;
     padding-top: 40px;
-    padding-left: 12px;
+    padding-left: 0px;
     text-align: left;
     -ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=0.99619470, M12=0.08715574, M21=-0.08715574, M22=0.99619470,sizingMethod='auto expand')";
     filter: progid:DXImageTransform.Microsoft.Matrix(M11=0.99619470, M12=0.08715574, M21=-0.08715574, M22=0.99619470,sizingMethod='auto expand');
@@ -85,6 +86,23 @@ a {
     -webkit-transform:  matrix(0.99619470, -0.08715574, 0.08715574, 0.99619470, 0, 0);
     -o-transform:  matrix(0.99619470, -0.08715574, 0.08715574, 0.99619470, 0, 0);
 }
+
+/*#me .content h1 {*/
+    /*border-bottom: 1px solid #666;*/
+    /*width: 90%;*/
+/*}*/
+
+/*#me .content h1 span {*/
+    /*position: relative;*/
+    /*left: -0.3em;*/
+    /*bottom: -0.6em;*/
+    /*padding: 1px 0.5em;*/
+    /*margin: 0;*/
+    /*border-style: solid;*/
+    /*border-width: 1px 1px 1px 0.8em;*/
+    /*border-color: #E00000;*/
+    /*background-color: #ddd;*/
+/*}*/
 
 .glance {
 
@@ -105,7 +123,7 @@ a {
 
 .glance ul li {
     float: left;
-    width: 60%;
+    width: 70%;
 }
 
 .glance ul li.label {

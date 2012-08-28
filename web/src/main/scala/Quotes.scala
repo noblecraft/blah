@@ -16,7 +16,7 @@ class Quotes(val quotes: ArrayBuffer[(Long, Quote)] = ArrayBuffer(), val delay: 
     assert(quotes(i)._1 == i.toLong)
   }
 
-  var seq = quotes.size
+  var seq = quotes.size.toLong
 
   var discarded = 0L
 

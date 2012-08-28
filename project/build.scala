@@ -25,6 +25,7 @@ object BlahBuild  extends Build {
     "org.joda" % "joda-convert" % "1.2",
     "org.codehaus.jackson" % "jackson-core-asl" % "1.9.3",
     "org.codehaus.jackson" % "jackson-mapper-asl" % "1.9.3",
+    "org.eclipse.jgit" % "org.eclipse.jgit" % "2.0.0.201206130900-r",
     "org.eclipse.jetty" % "jetty-servlets" % "7.4.5.v20110725",
     "org.scalatest" %% "scalatest" % "1.6.1" % "test",
     "org.scalamock" %% "scalamock-scalatest-support" % "2.2" % "test",
@@ -45,7 +46,8 @@ object BlahBuild  extends Build {
   val assemblyMergeSettings = Seq(mergeStrategy in assembly <<= (mergeStrategy in assembly) {
     (old) => {
       case "META-INF/spring.tooling" => MergeStrategy.first
-      case "overview.html" => MergeStrategy.first
+      case "overview.html" => MergeStrategy.discard
+      case "about.html" => MergeStrategy.discard
       case x => old(x)
     }
   }, mainClass in assembly := Some("com.davezhu.blah.web.Main"))

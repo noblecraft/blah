@@ -18,7 +18,7 @@ case class Tick(symbol: String, override val dts: DateTime, pricing: Pricing) ex
 case class LongPoll(symbol: String, seq: Long, replyTo: Actor, dts: DateTime = new DateTime())
 
 // This is the reply to LongPoll messages
-case class QuotesReply(quotes: Seq[Sequenced[Quote]])
+case class QuotesReply(quotes: Seq[Sequenced[Quote]], status: ServiceStatus.ServiceStatus)
 
 
 // TODO - test
@@ -29,6 +29,8 @@ class QuoteProvider(val quoteService: QuoteService, val dateTimeService: DateTim
   val quotes = new Quotes(delay = 1)
 
   val polls = scala.collection.mutable.ArrayBuffer[LongPoll]()
+
+  var status: ServiceStatus.ServiceStatus = ServiceStatus.Disconnected
 
   def act() {
 
@@ -44,6 +46,10 @@ class QuoteProvider(val quoteService: QuoteService, val dateTimeService: DateTim
 
       receiveWithin(500L) {
 
+        case NotifyStatus(s, _) => {
+          status = s
+        }
+
         case NotifyTick(symbol, trade) => {
           quotes += Tick(symbol, new DateTime(), trade)
           sendQuotesAndClearPolls
@@ -58,6 +64,7 @@ class QuoteProvider(val quoteService: QuoteService, val dateTimeService: DateTim
         }
 
         case lp: LongPoll => {
+
           Logging.debug(LOG, "LongPoll: " + lp)
           if (!sendQuotes(lp)) {
             polls += lp
@@ -98,7 +105,7 @@ class QuoteProvider(val quoteService: QuoteService, val dateTimeService: DateTim
 
     if (quotesSince.size > 0) {
 
-      Actor.actor { p.replyTo ! QuotesReply(quotesSince) }
+      Actor.actor { p.replyTo ! QuotesReply(quotesSince, status) }
 
       true
 
@@ -140,7 +147,7 @@ class MockQuoteProvider extends Actor {
           polls.foreach (poll => {
             val quotes: Seq[Sequenced[Quote]] = randomQuotes
             Logging.debug(LOG, "Sending LongPoll response: " + quotes)
-            poll.replyTo ! QuotesReply(quotes)
+            poll.replyTo ! QuotesReply(quotes, ServiceStatus.Connected)
           })
           polls.clear
 
