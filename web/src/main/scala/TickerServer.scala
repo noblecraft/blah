@@ -2,17 +2,16 @@ package com.davezhu.blah.web
 
 import unfiltered.netty.Server
 import unfiltered.netty.async.Plan
-import unfiltered.request.{Path, GET, Params}
+import unfiltered.request._
 import actors.TIMEOUT
 import unfiltered.response._
 import org.jboss.netty.channel.ChannelHandlerContext
 import scala.actors.Actor._
 import com.davezhu.blah.core.{Logging, QuoteService}
 import org.slf4j.LoggerFactory
-import com.davezhu.blah.web.LongPoll
-import com.davezhu.blah.web.QuotesReply
 import unfiltered.response.ContentType
 import unfiltered.response.ResponseString
+import unfiltered.kit.NoOpResponder
 
 
 object TickerServer {
@@ -43,9 +42,7 @@ object TickerServer {
 
             case quotesReply: QuotesReply =>
               Logging.debug(LOG, "Received LongPoll response: " + quotesReply + ", sending to client")
-              req.respond(Ok ~> ContentType("application/json") ~>
-                ResponseString(JsonConvertor.toQuotesJson(quotesReply.quotes)) ~>
-                ContentEncoding.GZip ~> ResponseFilter.GZip)
+              req.respond(Ok ~> ContentType("application/json") ~> gzipEncoding(req) ~> ResponseString(JsonConvertor.toQuotesJson(quotesReply.quotes)))
 
             case TIMEOUT =>
               Logging.debug(LOG, "Did not receive any LongPoll responses in time...")
@@ -62,6 +59,13 @@ object TickerServer {
     }
 
     def onException(ctx: ChannelHandlerContext, t: Throwable) {}
+
+    private def gzipEncoding(request: HttpRequest[Any]): ResponseFunction[Any] = {
+      request match {
+        case Decodes.GZip(req) => ContentEncoding.GZip ~> ResponseFilter.GZip
+        case _ => NoOpResponder
+      }
+    }
 
   }
 
